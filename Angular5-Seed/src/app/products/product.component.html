@@ -1,0 +1,59 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        {{title}}
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-2">
+                Filter By:
+            </div>
+            <div class="col-md-4">
+                <input type="text" [(ngModel)]="filterText"/>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Filtered BY:{{filterText}}</h3>
+            </div>
+        </div>
+        <div class="table-responsive"> 
+            {{showImage}}                
+            <table class="table" *ngIf="products && products.length">
+                <thead>
+                    <tr>
+                        <th>
+                            <button class="btn btn-success" (click)="toggleImage()">
+                                {{showImage?"Hide Image":"Show Image"}}
+                            </button>
+                        </th>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Date</th>
+                        <th>price</th>
+                        <th>Star Rating</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor='let product of products | filterData:filterText'>
+                        <td>
+                            <img [src]='product.imageUrl' *ngIf="showImage"
+                            [style.width.px]="imageWidth"/>
+                        </td>
+                        <td><a [routerLink]="['/products',product.productId]"
+                            [queryParams]="{name:product.productName,desc:product.description,img:product.imageUrl}">{{product.productName | myUpper:'upper' }}</a></td>
+                        <td>{{product.productCode | myUpper:'lower' }}</td>
+                        <td>{{today| date}}</td>
+                        <td [ngStyle]="{'color':product.price<30?'red':'green'}">{{product.price | addValue | currency:'INR'}}</td>
+                        <td>
+                            <app-star
+                                [rating]='product.starRating' 
+                                (ratingClick)="onDataRecive($event)"></app-star>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
